@@ -55,6 +55,9 @@ chmod +x shai-hulud-detector.sh
 # For comprehensive security scanning
 ./shai-hulud-detector.sh --paranoid /path/to/your/project
 
+# Save findings to a log file for review or CI/CD artifacts
+./shai-hulud-detector.sh --save-log report.log /path/to/your/project
+
 # Check exit code for CI/CD integration
 ./shai-hulud-detector.sh /path/to/your/project
 echo "Exit code: $?"  # 0=clean, 1=high-risk, 2=medium-risk
@@ -140,6 +143,10 @@ Check these security advisories regularly for newly discovered compromised packa
   - Linux: Most modern distributions include Bash 5.x by default
   - Check your version: `bash --version`
 - Standard Unix tools: `find`, `grep`, `shasum`
+- **Ripgrep (highly recommended)**: Install `rg` for significantly faster scanning on large codebases
+  - macOS: `brew install ripgrep`
+  - Linux: `apt install ripgrep` or `dnf install ripgrep`
+  - The script automatically uses ripgrep when available, falling back to grep otherwise
 
 ## Output Interpretation
 
@@ -226,6 +233,31 @@ case $exit_code in
        ;;
 esac
 ```
+
+### Saving Findings to a Log File
+
+Use `--save-log FILE` to save all detected file paths to a structured log file:
+
+```bash
+./shai-hulud-detector.sh --save-log findings.log /path/to/project
+```
+
+The log file contains file paths grouped by severity level:
+
+```
+# HIGH
+/path/to/malicious-workflow.yml
+/path/to/compromised-package.json
+# MEDIUM
+/path/to/suspicious-content.js
+# LOW
+/path/to/namespace-warning.json
+```
+
+This format is designed for:
+- **CI/CD artifacts**: Store scan results as build artifacts for review
+- **Programmatic parsing**: Easy to parse with simple scripts
+- **Full coverage**: Includes ALL findings without display truncation
 
 ## Testing
 
@@ -418,28 +450,6 @@ This script is for **detection only**. It does not:
 - Prevent future attacks
 
 Always verify findings manually and take appropriate remediation steps.
-
-## Latest Threat Intelligence Updates
-
-### s1ngularity/Nx Connection (September 2025)
-Recent investigations have revealed a potential connection between the Shai-Hulud campaign and the Nx package ecosystem:
-- **Repository Migration Patterns**: Attackers are using repositories with "-migration" suffixes to distribute malicious packages
-- **Advanced Package Integrity Checks**: Double base64-encoded `data.json` files have been discovered in compromised package versions
-- **Additional Compromised Versions**: `tinycolor@4.1.1` and `tinycolor@4.1.2` have been identified as compromised
-- **New Package Targets**: `angulartics2` and `koa2-swagger-ui` packages have been added to the compromised list
-
-### Enhanced Detection Capabilities (v2.5.0)
-The script now includes:
-- **Fixed lockfile false positives**: Improved package version extraction to prevent incorrect flagging of safe packages (fixes issue #37)
-- **Robust lockfile parsing**: Uses block-based JSON parsing instead of proximity-based grep to accurately extract package versions
-- **Context-aware XMLHttpRequest detection**: Reduces false positives for legitimate framework code (React Native, Next.js)
-- **Improved risk stratification**: XMLHttpRequest modifications now properly classified based on context and crypto patterns
-- **Parallel processing optimization**: ~20% performance improvement with semver pattern matching
-- **Duplicate-free package database**: Cleaned 600+ unique compromised package entries
-- Repository migration pattern detection
-- Package-lock.json integrity verification
-- Context-aware Trufflehog detection to reduce false positives
-- Risk level classification (HIGH/MEDIUM/LOW) for better triage
 
 ## References
 
