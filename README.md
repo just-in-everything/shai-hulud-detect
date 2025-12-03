@@ -1,3 +1,20 @@
+# TLDR
+Clone this package, then
+
+`cd shai-hulud-detect`
+
+The script requires Bash 5, which does not ship with OSX but can be installed with brew. Then invoke with the Brew installation of Bash.
+
+`/opt/homebrew/bin/bash ./shai-hulud-scan.sh`
+
+This should generate a list of all git repos identified in your user directory, with the exception of **this one**
+
+This may take awhile. 
+
+When its done, any potentially compromised repos will be reported at the end of the script.
+The full output for each repo can be found in ~/shai-detector-output directory.
+
+
 # Shai-Hulud NPM Supply Chain Attack Detector
 
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
