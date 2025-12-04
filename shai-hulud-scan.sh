@@ -104,6 +104,8 @@ find_git_repos_manual() {
 # Main script execution
 main() {
     declare vuln_repos
+    
+
 
     # Check if directory exists
     if [ ! -d "$SEARCH_DIR" ]; then
@@ -145,4 +147,10 @@ main() {
 }
 
 # Run main function
-main
+if [ $# -eq 0 ]; then
+    echo "Searching $SEARCH_DIR"
+else
+    SEARCH_DIR="$1"
+    echo "Using $SEARCH_DIR for searching"
+fi
+main 
