@@ -6,3 +6,4 @@ scratch
 *.plan
 shai-hulud-detector.out.txt
 shai-hulud-detector.tmp.txt
+node_modules
